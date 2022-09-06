@@ -84,7 +84,18 @@ jobs:
         set -e
         set -x
         apt-get --quiet update
+
+        # Add linuxcnc.org deb archive to apt sources list.
+        apt-get --yes --quiet install gpg software-properties-common
+        gpg --keyserver hkps://keyserver.ubuntu.com --recv-key 3CB9FD148F374FEF
+        gpg --output /etc/apt/trusted.gpg.d/linuxcnc-deb-archive.gpg --export 3CB9FD148F374FEF
+        DIST=$(echo ${{matrix.image}} | cut -d : -f 2)
+        add-apt-repository "deb http://linuxcnc.org $DIST base"
+        apt-get --quiet update
+
+        # Install stuff needed to turn a linuxcnc working tree into a debian source package.
         apt-get --yes --quiet install --no-install-suggests git lsb-release python3 devscripts
+
     - uses: actions/checkout@v3
       with:
         # "fetch-depth: 0" fetches all of history, this is needed by
@@ -154,7 +165,18 @@ jobs:
         set -e
         set -x
         apt-get --quiet update
+
+        # Add linuxcnc.org deb archive to apt sources list.
+        apt-get --yes --quiet install gpg software-properties-common
+        gpg --keyserver hkps://keyserver.ubuntu.com --recv-key 3CB9FD148F374FEF
+        gpg --output /etc/apt/trusted.gpg.d/linuxcnc-deb-archive.gpg --export 3CB9FD148F374FEF
+        DIST=$(echo ${{matrix.image}} | cut -d : -f 2)
+        add-apt-repository "deb http://linuxcnc.org $DIST base"
+        apt-get --quiet update
+
+        # Install stuff needed to turn a linuxcnc working tree into a debian source package.
         apt-get --yes --quiet install --no-install-suggests git lsb-release python3 devscripts
+
     - uses: actions/checkout@v3
       with:
         # "fetch-depth: 0" fetches all of history, this is needed by
